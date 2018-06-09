@@ -53,9 +53,11 @@ export const getResultMessage = (gameResults, userResult) => {
 export const getTimer = (time = gameOptions.timeAll) => {
   return {
     _time: time >= 0 ? time : -time,
+
     get time() {
       return this._time > 0 ? this._time : -1;
     },
+
     set time(newTime) {
       if (newTime >= 0) {
         this._time = newTime;
@@ -63,6 +65,7 @@ export const getTimer = (time = gameOptions.timeAll) => {
         throw new Error(`Time should be possitive`);
       }
     },
+
     tick() {
       this._time -= 1;
       return this._time > 0 ? this._time : -1;
@@ -70,20 +73,22 @@ export const getTimer = (time = gameOptions.timeAll) => {
   };
 };
 
-const getWordEnding = (num) => {
+const getWordEnding = (num, endings) => {
   if ((num > 10 && num <= 20) || num % 10 > 4 || num % 10 === 0) {
-    return ``;
+    return endings[0];
   }
+
   if (num % 10 === 1) {
-    return `у`;
+    return endings[1];
   }
-  return `ы`;
+
+  return endings[2];
 };
 
 export const getTimeString = (time) => {
   const second = time % 60;
   const minute = Math.trunc(time / 60);
 
-  return `за ${minute} минут${getWordEnding(minute)} и \
-${`${second}`.length < 2 ? `0${second}` : second} секунд${getWordEnding(second)}`;
+  return `за ${minute} минут${getWordEnding(minute, [``, `у`, `ы`])} и \
+${`${second}`.length < 2 ? `0${second}` : second} секунд${getWordEnding(second, [``, `у`, `ы`])}`;
 };
