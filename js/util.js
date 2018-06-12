@@ -3,8 +3,8 @@ export const getElementFromTemplate = (template) => {
   return domParser.parseFromString(template, `text/html`).body.firstElementChild;
 };
 
-const APP_ELEMENT = document.querySelector(`.app`);
 export const showScreen = (screenElement) => {
+  const APP_ELEMENT = document.querySelector(`.app`);
   const MAIN_ELEMENT = APP_ELEMENT.querySelector(`section.main`);
   APP_ELEMENT.replaceChild(screenElement, MAIN_ELEMENT);
 };
