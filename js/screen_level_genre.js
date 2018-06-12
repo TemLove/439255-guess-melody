@@ -1,127 +1,120 @@
 import {getElementFromTemplate, showScreen} from "./util";
 import welcomeScreenElement from "./screen_welcome";
-import winResultScreenElement from "./screen_result_win";
-import timeoutResultScreenElement from "./screen_result_timeout";
-import attemptsResultScreenElement from "./screen_result_attempts";
+import getlevelArtistScreen from "./screen_level_artist";
+import getResultScreen from "./screen_result";
+import levelHeader from "./level-header";
 
-const template = `<section class="main main--level main--level-genre">
-<a class="play-again play-again__wrap" href="#">
-  <img class="play-again__img" src="/img/melody-logo-ginger.png" alt="logo" width="177" height="76">
-</a>
-<svg xmlns="http://www.w3.org/2000/svg" class="timer" viewBox="0 0 780 780">
-  <circle
-    cx="390" cy="390" r="370"
-    class="timer-line"
-    style="filter: url(.#blur); transform: rotate(-90deg) scaleY(-1); transform-origin: center"></circle>
+const GENRES = new Map([
+  [`Jazz`, `джаз`],
+  [`Rock`, `рок`],
+  [`Country`, `кантри`],
+  [`R&B`, `ритм-н-блюз`],
+  [`Pop`, `поп`],
+  [`Electronic`, `электро`],
+  [`Indie rock`, `инди-рок`]
+]);
 
-  <div class="timer-value" xmlns="http://www.w3.org/1999/xhtml">
-    <span class="timer-value-mins">05</span><!--
-    --><span class="timer-value-dots">:</span><!--
-    --><span class="timer-value-secs">00</span>
-  </div>
-</svg>
-<div class="main-mistakes">
-  <img class="main-mistake" src="img/wrong-answer.png" width="35" height="49">
-  <img class="main-mistake" src="img/wrong-answer.png" width="35" height="49">
-  <img class="main-mistake" src="img/wrong-answer.png" width="35" height="49">
-</div>
+const getTemplate = (data) => {
+  const levelData = data.levelsData[data.currentScreen];
+  const question = `<h2 class="title">Выберите ${GENRES.get(levelData.target)} треки</h2>`;
+  const answers = levelData.answers.map((track, index) => {
+    return `<div class="genre-answer" \
+    ${data.isTestingMode && track.isAnswerRight ? `style="outline: 2px solid red;"` : ``}>
+        <div class="player-wrapper">
+          <div class="player">
+            <audio src="${track.src}"></audio>
+            <button class="player-control player-control--play" type="button"></button>
+            <div class="player-track">
+              <span class="player-status"></span>
+            </div>
+          </div>
+        </div>
+        <input type="checkbox" name="answer" value="answer-${index}" id="a-${index}">
+        <label class="genre-answer-check" for="a-${index}"></label>
+      </div>`;
+  }).join(``);
 
-<div class="main-wrap">
-  <h2 class="title">Выберите инди-рок треки</h2>
+  const content = `<div class="main-wrap">
+  ${question}
   <form class="genre">
-    <div class="genre-answer">
-      <div class="player-wrapper">
-        <div class="player">
-          <audio></audio>
-          <button class="player-control player-control--pause" type="button"></button>
-          <div class="player-track">
-            <span class="player-status"></span>
-          </div>
-        </div>
-      </div>
-      <input type="checkbox" name="answer" value="answer-1" id="a-1">
-      <label class="genre-answer-check" for="a-1"></label>
-    </div>
-
-    <div class="genre-answer">
-      <div class="player-wrapper">
-        <div class="player">
-          <audio></audio>
-          <button class="player-control player-control--play" type="button"></button>
-          <div class="player-track">
-            <span class="player-status"></span>
-          </div>
-        </div>
-      </div>
-      <input type="checkbox" name="answer" value="answer-1" id="a-2">
-      <label class="genre-answer-check" for="a-2"></label>
-    </div>
-
-    <div class="genre-answer">
-      <div class="player-wrapper">
-        <div class="player">
-          <audio></audio>
-          <button class="player-control player-control--play" type="button"></button>
-          <div class="player-track">
-            <span class="player-status"></span>
-          </div>
-        </div>
-      </div>
-      <input type="checkbox" name="answer" value="answer-1" id="a-3">
-      <label class="genre-answer-check" for="a-3"></label>
-    </div>
-
-    <div class="genre-answer">
-      <div class="player-wrapper">
-        <div class="player">
-          <audio></audio>
-          <button class="player-control player-control--play" type="button"></button>
-          <div class="player-track">
-            <span class="player-status"></span>
-          </div>
-        </div>
-      </div>
-      <input type="checkbox" name="answer" value="answer-1" id="a-4">
-      <label class="genre-answer-check" for="a-4"></label>
-    </div>
-
+    ${answers}
     <button class="genre-answer-send" type="submit">Ответить</button>
   </form>
-</div>
-</section>`;
+</div>`;
 
-const levelGenreElement = getElementFromTemplate(template);
-const playAgainElement = levelGenreElement.querySelector(`.play-again`);
-const submitButonElement = levelGenreElement.querySelector(`.genre-answer-send`);
-const answerLabelElements = [...levelGenreElement.querySelectorAll(`.genre-answer-check`)];
-const answerInputElements = [...levelGenreElement.querySelectorAll(`input[name="answer"]`)];
-const resultScreens = [winResultScreenElement, timeoutResultScreenElement, attemptsResultScreenElement];
+  return `<section class="main main--level main--level-genre">
+${levelHeader(data)}
+${content}
+</section>`;
+};
 
 const onPlayAgainClick = () => {
   showScreen(welcomeScreenElement);
 };
 
-const onSubmitButtonClick = () => {
-  showScreen(resultScreens[Math.floor(Math.random() * resultScreens.length)]);
+const getlevelGenreScreen = (data) => {
+  const template = getTemplate(data);
+  const levelGenreElement = getElementFromTemplate(template);
 
-  answerInputElements.forEach((it) => {
-    it.checked = false;
-  });
+  const playAgainElement = levelGenreElement.querySelector(`.play-again`);
+  const submitButonElement = levelGenreElement.querySelector(`.genre-answer-send`);
+  const answerLabelElements = [...levelGenreElement.querySelectorAll(`.genre-answer-check`)];
+  const answerInputElements = [...levelGenreElement.querySelectorAll(`input[name="answer"]`)];
+
+  const onAnswerClick = (evt) => {
+    evt.preventDefault();
+
+    const input = levelGenreElement.querySelector(`#${evt.target.getAttribute(`for`)}`);
+
+    input.checked = !input.checked;
+    submitButonElement.disabled = !(answerInputElements.some((it) => it.checked));
+  };
+
+  const onSubmitButtonClick = (evt) => {
+    evt.preventDefault();
+
+    saveUserAnswer(answerInputElements.find((it) => it.checked));
+
+    const nextLevel = data.levelsData[data.currentScreen + 1];
+
+    if (data.attemptsLeft === 0 || !nextLevel) {
+      showScreen(getResultScreen(data));
+    } else {
+      data.currentScreen += 1;
+      if (nextLevel.type === `artist`) {
+        showScreen(getlevelArtistScreen(data));
+      }
+      if (nextLevel.type === `genre`) {
+        showScreen(getlevelGenreScreen(data));
+      }
+    }
+
+    playAgainElement.removeEventListener(`click`, onPlayAgainClick);
+    submitButonElement.removeEventListener(`click`, onSubmitButtonClick);
+    answerLabelElements.forEach((it) => it.removeEventListener(`click`, onAnswerClick));
+  };
+
+  const saveUserAnswer = (answerElement) => {
+    const index = answerInputElements.indexOf(answerElement);
+    const isAnswerRight = data.levelsData[data.currentScreen].answers[index].isAnswerRight;
+    const spendedTime = 30;
+
+    if (!isAnswerRight) {
+      data.attemptsLeft -= 1;
+    }
+
+    data.userAnswers.push({
+      isAnswerRight,
+      spendedTime
+    });
+  };
+
   submitButonElement.disabled = true;
+  playAgainElement.addEventListener(`click`, onPlayAgainClick);
+  submitButonElement.addEventListener(`click`, onSubmitButtonClick);
+  answerLabelElements.forEach((it) => it.addEventListener(`click`, onAnswerClick));
+
+  return levelGenreElement;
 };
 
-const onAnswerClick = (evt) => {
-  evt.preventDefault();
-
-  const input = levelGenreElement.querySelector(`#${evt.target.getAttribute(`for`)}`);
-
-  input.checked = !input.checked;
-  submitButonElement.disabled = !(answerInputElements.some((it) => it.checked));
-};
-
-submitButonElement.disabled = true;
-playAgainElement.addEventListener(`click`, onPlayAgainClick);
-submitButonElement.addEventListener(`click`, onSubmitButtonClick);
-answerLabelElements.forEach((it) => it.addEventListener(`click`, onAnswerClick));
-
-export default levelGenreElement;
+export default getlevelGenreScreen;
