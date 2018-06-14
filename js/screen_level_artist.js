@@ -3,7 +3,7 @@ import welcomeScreenElement from "./screen_welcome";
 import getlevelGenreScreen from "./screen_level_genre";
 import getResultScreen from "./screen_result";
 import levelHeader from "./level-header";
-import {saveAnswer, changeLevel} from "./data/game-data";
+import {saveAnswer, changeLevel, canContinue} from "./data/game-data";
 
 const getTemplate = (data) => {
   const levelData = data.levelsData[data.currentScreen];
@@ -56,7 +56,7 @@ const getlevelArtistScreen = (data) => {
 
     const nextLevel = gameData.currentScreen + 1;
 
-    if (gameData.attemptsLeft === 0 || !gameData.levelsData[nextLevel]) {
+    if (canContinue(gameData)) {
       showScreen(getResultScreen(gameData));
     } else {
       if (gameData.levelsData[nextLevel].type === `artist`) {

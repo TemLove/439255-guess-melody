@@ -3,7 +3,7 @@ import welcomeScreenElement from "./screen_welcome";
 import getlevelArtistScreen from "./screen_level_artist";
 import getResultScreen from "./screen_result";
 import levelHeader from "./level-header";
-import {changeLevel, saveAnswer} from "./data/game-data";
+import {changeLevel, saveAnswer, canContinue} from "./data/game-data";
 
 const GENRES = new Map([
   [`Jazz`, `джаз`],
@@ -80,7 +80,7 @@ const getlevelGenreScreen = (data) => {
 
     const nextLevel = gameData.currentScreen + 1;
 
-    if (gameData.attemptsLeft === 0 || !gameData.levelsData[nextLevel]) {
+    if (canContinue(gameData)) {
       showScreen(getResultScreen(gameData));
     } else {
       if (gameData.levelsData[nextLevel].type === `artist`) {

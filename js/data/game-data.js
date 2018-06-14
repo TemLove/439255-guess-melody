@@ -56,14 +56,9 @@ export const changeLevel = (game, level) => {
   });
 };
 
-
-export const canContinue = (game) => game.attemptsLeft - 1 > 0;
+export const canContinue = (game) => game.attemptsLeft === 0 || !game.levelsData[game.currentScreen + 1];
 
 export const loseAttempt = (game) => {
-  if (!canContinue(game)) {
-    throw new Error(`You can't continue anymore`);
-  }
-
   const attempts = game.attemptsLeft - 1;
 
   return Object.assign({}, game, {
