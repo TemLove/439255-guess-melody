@@ -3,6 +3,7 @@ import welcomeScreenElement from "./screen_welcome";
 import getlevelArtistScreen from "./screen_level_artist";
 import getResultScreen from "./screen_result";
 import levelHeader from "./level-header";
+import {changeLevel, saveAnswer} from "./data/game-data";
 
 const GENRES = new Map([
   [`Jazz`, `джаз`],
@@ -73,19 +74,20 @@ const getlevelGenreScreen = (data) => {
   const onSubmitButtonClick = (evt) => {
     evt.preventDefault();
 
-    saveUserAnswer(answerInputElements.find((it) => it.checked));
+    const checkedInput = answerInputElements.find((it) => it.checked);
+    const answer = getUserAnswer(checkedInput);
+    const gameData = saveAnswer(data, answer);
 
-    const nextLevel = data.levelsData[data.currentScreen + 1];
+    const nextLevel = gameData.currentScreen + 1;
 
-    if (data.attemptsLeft === 0 || !nextLevel) {
-      showScreen(getResultScreen(data));
+    if (gameData.attemptsLeft === 0 || !gameData.levelsData[nextLevel]) {
+      showScreen(getResultScreen(gameData));
     } else {
-      data.currentScreen += 1;
-      if (nextLevel.type === `artist`) {
-        showScreen(getlevelArtistScreen(data));
+      if (gameData.levelsData[nextLevel].type === `artist`) {
+        showScreen(getlevelArtistScreen(changeLevel(gameData, nextLevel)));
       }
-      if (nextLevel.type === `genre`) {
-        showScreen(getlevelGenreScreen(data));
+      if (gameData.levelsData[nextLevel].type === `genre`) {
+        showScreen(getlevelGenreScreen(changeLevel(gameData, nextLevel)));
       }
     }
 
@@ -94,19 +96,15 @@ const getlevelGenreScreen = (data) => {
     answerLabelElements.forEach((it) => it.removeEventListener(`click`, onAnswerClick));
   };
 
-  const saveUserAnswer = (answerElement) => {
+  const getUserAnswer = (answerElement) => {
     const index = answerInputElements.indexOf(answerElement);
     const isAnswerRight = data.levelsData[data.currentScreen].answers[index].isAnswerRight;
     const spendedTime = 30;
 
-    if (!isAnswerRight) {
-      data.attemptsLeft -= 1;
-    }
-
-    data.userAnswers.push({
+    return {
       isAnswerRight,
       spendedTime
-    });
+    };
   };
 
   submitButonElement.disabled = true;

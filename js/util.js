@@ -12,7 +12,7 @@ export const showScreen = (screenElement) => {
 export const splitTimeValues = (time) => {
   const second = time % 60;
   const minute = Math.trunc(time / 60);
-  return [minute, second];
+  return {minute, second};
 };
 
 export const getWordEnding = (num, endings) => {

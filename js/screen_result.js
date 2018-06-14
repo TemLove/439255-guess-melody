@@ -23,13 +23,14 @@ export const getTemplate = (gameResultsData, userResult) => {
     const userPosition = results.length - results.indexOf(userResult.score);
     const playersCount = results.length;
     const successPercent = ((playersCount - userPosition) / playersCount).toFixed(2) * 100;
-    const [minute, second] = splitTimeValues(gameOptions.timeAll - userResult.timeLeft);
+    const time = splitTimeValues(gameOptions.timeAll - userResult.timeLeft);
     const mistakesCount = gameOptions.attemptsCount - userResult.attemptsLeft;
 
     title = `Вы настоящий меломан!`;
-    content = `<div class="main-stat">за&nbsp;${minute}&nbsp;минут${getWordEnding(minute, [``, `у`, `ы`])} и \
-    ${`${second}`.padStart(2, `0`)}&nbsp;секунд${getWordEnding(second, [``, `у`, `ы`])}
-    <br>вы&nbsp;набрали ${userResult.score} баллов (${userResult.quickAnswers} быстрых)
+    content = `<div class="main-stat">за&nbsp;${time.minute}&nbsp;минут${getWordEnding(time.minute, [``, `у`, `ы`])} и \
+    ${`${time.second}`.padStart(2, `0`)}&nbsp;секунд${getWordEnding(time.second, [``, `у`, `ы`])}
+    <br>вы&nbsp;набрали ${userResult.score} балл${getWordEnding(userResult.score, [`ов`, ``, `а`])} \
+    (${userResult.quickAnswers} быстры${getWordEnding(userResult.quickAnswers, [`х`, `й`, `х`])})
     <br>совершив ${mistakesCount} ошиб${getWordEnding(mistakesCount, [`ок`, `ку`, `ки`])}</div>
   <span class="main-comparison">Вы заняли ${userPosition} место из ${playersCount}. \
     Это&nbsp;лучше, чем у&nbsp;${successPercent}%&nbsp;игроков</span>`;
@@ -57,7 +58,7 @@ const getResultScreen = (data) => {
   const userResult = {
     score: userScore,
     attemptsLeft: data.attemptsLeft,
-    timeLeft: data.timeLeft,
+    timeLeft: data.timer.time,
     quickAnswers: quickAnswerCount
   };
 

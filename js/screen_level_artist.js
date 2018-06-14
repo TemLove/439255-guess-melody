@@ -3,6 +3,7 @@ import welcomeScreenElement from "./screen_welcome";
 import getlevelGenreScreen from "./screen_level_genre";
 import getResultScreen from "./screen_result";
 import levelHeader from "./level-header";
+import {saveAnswer, changeLevel} from "./data/game-data";
 
 const getTemplate = (data) => {
   const levelData = data.levelsData[data.currentScreen];
@@ -50,19 +51,19 @@ const getlevelArtistScreen = (data) => {
   const answerElements = [...levelArtistElement.querySelectorAll(`.main-answer-wrapper`)];
 
   const onAnswerClick = (evt) => {
-    saveUserAnswer(evt.target.parentElement.parentElement);
+    const answer = getUserAnswer(evt.target);
+    const gameData = saveAnswer(data, answer);
 
-    const nextLevel = data.levelsData[data.currentScreen + 1];
+    const nextLevel = gameData.currentScreen + 1;
 
-    if (data.attemptsLeft === 0 || !nextLevel) {
-      showScreen(getResultScreen(data));
+    if (gameData.attemptsLeft === 0 || !gameData.levelsData[nextLevel]) {
+      showScreen(getResultScreen(gameData));
     } else {
-      data.currentScreen += 1;
-      if (nextLevel.type === `artist`) {
-        showScreen(getlevelArtistScreen(data));
+      if (gameData.levelsData[nextLevel].type === `artist`) {
+        showScreen(getlevelArtistScreen(changeLevel(gameData, nextLevel)));
       }
-      if (nextLevel.type === `genre`) {
-        showScreen(getlevelGenreScreen(data));
+      if (gameData.levelsData[nextLevel].type === `genre`) {
+        showScreen(getlevelGenreScreen(changeLevel(gameData, nextLevel)));
       }
     }
 
@@ -70,19 +71,18 @@ const getlevelArtistScreen = (data) => {
     answerElements.forEach((it) => it.removeEventListener(`click`, onAnswerClick));
   };
 
-  const saveUserAnswer = (answerElement) => {
+  const getUserAnswer = (answerElement) => {
+    while (!answerElement.classList.contains(`main-answer-wrapper`)) {
+      answerElement = answerElement.parentElement;
+    }
     const index = answerElements.indexOf(answerElement);
     const isAnswerRight = data.levelsData[data.currentScreen].answers[index].isAnswerRight;
     const spendedTime = 30;
 
-    if (!isAnswerRight) {
-      data.attemptsLeft -= 1;
-    }
-
-    data.userAnswers.push({
+    return {
       isAnswerRight,
       spendedTime
-    });
+    };
   };
 
   playAgainElement.addEventListener(`click`, onPlayAgainClick);

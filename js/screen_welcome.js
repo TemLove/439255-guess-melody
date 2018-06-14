@@ -23,11 +23,8 @@ const welcomeScreenElement = getElementFromTemplate(template);
 const playElement = welcomeScreenElement.querySelector(`.main-play`);
 
 const onButtonClick = () => {
-  gameState.currentScreen = 0;
-  gameState.timeLeft = gameOptions.timeAll;
-  gameState.attemptsLeft = gameOptions.attemptsCount;
-
   const startLevel = gameState.levelsData[0];
+
   if (startLevel.type === `artist`) {
     showScreen(getlevelArtistScreen(gameState));
   }

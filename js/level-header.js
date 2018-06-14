@@ -2,7 +2,7 @@ import {splitTimeValues} from "./util";
 import {gameOptions} from "./data/game-data";
 
 export default (data) => {
-  const [minute, second] = splitTimeValues(data.timeLeft);
+  const time = splitTimeValues(data.timer.time);
   const mistakesNoteCount = gameOptions.attemptsCount - data.attemptsLeft;
   const mistakesNoteMarkup = `<img class="main-mistake" src="img/wrong-answer.png" width="35" height="49"> `;
 
@@ -17,9 +17,9 @@ export default (data) => {
     style="filter: url(.#blur); transform: rotate(-90deg) scaleY(-1); transform-origin: center"></circle>
 
   <div class="timer-value" xmlns="http://www.w3.org/1999/xhtml">
-    <span class="timer-value-mins">0${minute}</span><!--
+    <span class="timer-value-mins">0${time.minute}</span><!--
     --><span class="timer-value-dots">:</span><!--
-    --><span class="timer-value-secs">${`${second}`.padStart(2, `0`)}</span>
+    --><span class="timer-value-secs">${`${time.second}`.padStart(2, `0`)}</span>
   </div>
 </svg>
 <div class="main-mistakes">
