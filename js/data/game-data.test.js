@@ -1,5 +1,5 @@
 import {assert} from 'chai';
-import {countResultScore, getResultMessage, getTimer, getTimeString} from './game-data';
+import {countResultScore, getTimer} from './game-data';
 
 describe(`Result count function`, () => {
   it(`Should return -1 when answers count less than 10`, () => {
@@ -122,37 +122,6 @@ describe(`Result count function`, () => {
   });
 });
 
-describe(`getResultMessage function`, () => {
-  it(`Should return correct lose message when time is over`, () => {
-    assert.strictEqual(`Время вышло! Вы не успели отгадать все мелодии`, getResultMessage([4, 5, 8, 10, 11], {
-      score: 4,
-      attemptsLeft: 1,
-      timeLeft: 0
-    }));
-  });
-
-  it(`Should return correct lose message when attempts is over`, () => {
-    assert.strictEqual(`У вас закончились все попытки. Ничего, повезет в следующи раз!`, getResultMessage([4, 5, 8, 10, 11], {
-      score: 12,
-      attemptsLeft: 0,
-      timeLeft: 5
-    }));
-  });
-
-  it(`Should return correct win message when game successfully completed`, () => {
-    assert.strictEqual(`Вы заняли 1 место из 5. Это лучше, чем у 80% игроков`, getResultMessage([5, 8, 10, 11], {
-      score: 12,
-      attemptsLeft: 1,
-      timeLeft: 5
-    }));
-    assert.strictEqual(`Вы заняли 4 место из 10. Это лучше, чем у 60% игроков`, getResultMessage([2, 18, 4, 13, 5, 15, 8, 10, 11], {
-      score: 12,
-      attemptsLeft: 1,
-      timeLeft: 5
-    }));
-  });
-});
-
 describe(`getTimer function`, () => {
   it(`Should return timer object with setted time`, () => {
     assert.isObject(getTimer());
@@ -171,15 +140,5 @@ describe(`getTimer function`, () => {
     assert.throws(() => {
       getTimer().time = -1000;
     });
-  });
-});
-
-describe(`getTimeString function`, () => {
-  it(`Should return correct time string`, () => {
-    assert.deepEqual(`за 1 минуту и 01 секунду`, getTimeString(61));
-    assert.deepEqual(`за 2 минуты и 22 секунды`, getTimeString(142));
-    assert.deepEqual(`за 3 минуты и 37 секунд`, getTimeString(217));
-    assert.deepEqual(`за 4 минуты и 11 секунд`, getTimeString(251));
-    assert.deepEqual(`за 5 минут и 00 секунд`, getTimeString(300));
   });
 });

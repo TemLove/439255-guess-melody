@@ -1,33 +1,29 @@
 import {getElementFromTemplate, showScreen} from "./util";
 import welcomeScreenElement from "./screen_welcome";
-import levelGenreElement from "./screen_level_genre";
+import getlevelGenreScreen from "./screen_level_genre";
+import getResultScreen from "./screen_result";
+import levelHeader from "./level-header";
+import {saveAnswer, changeLevel, canContinue} from "./data/game-data";
 
-const template = `<section class="main main--level main--level-artist">
-<a class="play-again play-again__wrap" href="#">
-  <img class="play-again__img" src="/img/melody-logo-ginger.png" alt="logo" width="177" height="76">
-</a>
-<svg xmlns="http://www.w3.org/2000/svg" class="timer" viewBox="0 0 780 780">
-  <circle
-    cx="390" cy="390" r="370"
-    class="timer-line"
-    style="filter: url(.#blur); transform: rotate(-90deg) scaleY(-1); transform-origin: center"></circle>
+const getTemplate = (data) => {
+  const levelData = data.levelsData[data.currentScreen];
+  const answers = levelData.answers.map((track, index) => {
+    return `<div class="main-answer-wrapper" \
+    ${data.isTestingMode && track.isAnswerRight ? `style="outline: 2px solid red;"` : ``}>
+    <input class="main-answer-r" type="radio" id="answer-${index}" name="answer" value="val-${index}"/>
+    <label class="main-answer" for="answer-${index}">
+      <img class="main-answer-preview" src="${track.image}"
+           alt="${track.artist}" width="134" height="134">
+      ${track.artist}
+    </label>
+  </div>`;
+  }).join();
 
-  <div class="timer-value" xmlns="http://www.w3.org/1999/xhtml">
-    <span class="timer-value-mins">05</span><!--
-    --><span class="timer-value-dots">:</span><!--
-    --><span class="timer-value-secs">00</span>
-  </div>
-</svg>
-<div class="main-mistakes">
-  <img class="main-mistake" src="img/wrong-answer.png" width="35" height="49">
-  <img class="main-mistake" src="img/wrong-answer.png" width="35" height="49">
-</div>
-
-<div class="main-wrap">
+  const content = `<div class="main-wrap">
   <h2 class="title main-title">Кто исполняет эту песню?</h2>
   <div class="player-wrapper">
     <div class="player">
-      <audio></audio>
+      <audio src="${levelData.target}"></audio>
       <button class="player-control player-control--pause"></button>
       <div class="player-track">
         <span class="player-status"></span>
@@ -35,49 +31,64 @@ const template = `<section class="main main--level main--level-artist">
     </div>
   </div>
   <form class="main-list">
-    <div class="main-answer-wrapper">
-      <input class="main-answer-r" type="radio" id="answer-1" name="answer" value="val-1"/>
-      <label class="main-answer" for="answer-1">
-        <img class="main-answer-preview" src="http://placehold.it/134x134"
-             alt="Пелагея" width="134" height="134">
-        Пелагея
-      </label>
-    </div>
-
-    <div class="main-answer-wrapper">
-      <input class="main-answer-r" type="radio" id="answer-2" name="answer" value="val-2"/>
-      <label class="main-answer" for="answer-2">
-        <img class="main-answer-preview" src="http://placehold.it/134x134"
-             alt="Краснознаменная дивизия имени моей бабушки" width="134" height="134">
-        Краснознаменная дивизия имени моей бабушки
-      </label>
-    </div>
-
-    <div class="main-answer-wrapper">
-      <input class="main-answer-r" type="radio" id="answer-3" name="answer" value="val-3"/>
-      <label class="main-answer" for="answer-3">
-        <img class="main-answer-preview" src="http://placehold.it/134x134"
-             alt="Lorde" width="134" height="134">
-        Lorde
-      </label>
-    </div>
+    ${answers}
   </form>
-</div>
-</section>`;
+</div>`;
 
-const levelArtistElement = getElementFromTemplate(template);
-const playAgainElement = levelArtistElement.querySelector(`.play-again`);
-const answerElements = [...levelArtistElement.querySelectorAll(`.main-answer-wrapper`)];
+  return `<section class="main main--level main--level-artist">
+${levelHeader(data)}
+${content}
+</section>`;
+};
 
 const onPlayAgainClick = () => {
   showScreen(welcomeScreenElement);
 };
 
-const onAnswerClick = () => {
-  showScreen(levelGenreElement);
+const getlevelArtistScreen = (data) => {
+  const levelArtistElement = getElementFromTemplate(getTemplate(data));
+  const playAgainElement = levelArtistElement.querySelector(`.play-again`);
+  const answerElements = [...levelArtistElement.querySelectorAll(`.main-answer-wrapper`)];
+
+  const onAnswerClick = (evt) => {
+    const answer = getUserAnswer(evt.target);
+    const gameData = saveAnswer(data, answer);
+
+    const nextLevel = gameData.currentScreen + 1;
+
+    if (canContinue(gameData)) {
+      showScreen(getResultScreen(gameData));
+    } else {
+      if (gameData.levelsData[nextLevel].type === `artist`) {
+        showScreen(getlevelArtistScreen(changeLevel(gameData, nextLevel)));
+      }
+      if (gameData.levelsData[nextLevel].type === `genre`) {
+        showScreen(getlevelGenreScreen(changeLevel(gameData, nextLevel)));
+      }
+    }
+
+    playAgainElement.removeEventListener(`click`, onPlayAgainClick);
+    answerElements.forEach((it) => it.removeEventListener(`click`, onAnswerClick));
+  };
+
+  const getUserAnswer = (answerElement) => {
+    while (!answerElement.classList.contains(`main-answer-wrapper`)) {
+      answerElement = answerElement.parentElement;
+    }
+    const index = answerElements.indexOf(answerElement);
+    const isAnswerRight = data.levelsData[data.currentScreen].answers[index].isAnswerRight;
+    const spendedTime = 30;
+
+    return {
+      isAnswerRight,
+      spendedTime
+    };
+  };
+
+  playAgainElement.addEventListener(`click`, onPlayAgainClick);
+  answerElements.forEach((it) => it.addEventListener(`click`, onAnswerClick));
+
+  return levelArtistElement;
 };
 
-playAgainElement.addEventListener(`click`, onPlayAgainClick);
-answerElements.forEach((it) => it.addEventListener(`click`, onAnswerClick));
-
-export default levelArtistElement;
+export default getlevelArtistScreen;

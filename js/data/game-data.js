@@ -1,54 +1,4 @@
-export const gameOptions = {
-  timeAll: 300,
-  timeLimitForQuickAnswer: 30,
-  levelsCount: 10,
-  attemptsCount: 3,
-  scoreForRightAnswer: 1,
-  scoreForQuickRightAnswer: 2,
-  scoreForWrongAnswer: -2
-};
-
-export const countResultScore = (userAnswers, attemptsLeft) => {
-  if (userAnswers.length < gameOptions.levelsCount || attemptsLeft === 0) {
-    return -1;
-  }
-
-  return userAnswers.reduce((acc, it) => {
-    if (it.isAnswerRight && it.spendedTime < gameOptions.timeLimitForQuickAnswer) {
-      acc += gameOptions.scoreForQuickRightAnswer;
-    }
-
-    if (it.isAnswerRight && it.spendedTime >= gameOptions.timeLimitForQuickAnswer) {
-      acc += gameOptions.scoreForRightAnswer;
-    }
-
-    if (!it.isAnswerRight) {
-      acc += gameOptions.scoreForWrongAnswer;
-    }
-
-    return acc;
-  }, 0);
-};
-
-export const getResultMessage = (gameResults, userResult) => {
-  if (userResult.timeLeft === 0) {
-    return `Время вышло! Вы не успели отгадать все мелодии`;
-  }
-
-  if (userResult.attemptsLeft === 0) {
-    return `У вас закончились все попытки. Ничего, повезет в следующи раз!`;
-  }
-
-  let results = gameResults.slice();
-  results.push(userResult.score);
-  results.sort((a, b) => a - b);
-
-  const userPosition = results.length - results.indexOf(userResult.score);
-  const playersCount = results.length;
-  const successPercent = ((playersCount - userPosition) / playersCount).toFixed(2) * 100;
-
-  return `Вы заняли ${userPosition} место из ${playersCount}. Это лучше, чем у ${successPercent}% игроков`;
-};
+import {getLevelData} from "./level-data";
 
 export const getTimer = (time = gameOptions.timeAll) => {
   return {
@@ -73,22 +23,75 @@ export const getTimer = (time = gameOptions.timeAll) => {
   };
 };
 
-const getWordEnding = (num, endings) => {
-  if ((num > 10 && num <= 20) || num % 10 > 4 || num % 10 === 0) {
-    return endings[0];
-  }
-
-  if (num % 10 === 1) {
-    return endings[1];
-  }
-
-  return endings[2];
+export const gameOptions = {
+  timeAll: 300,
+  timeLimitForQuickAnswer: 30,
+  levelsCount: 10,
+  attemptsCount: 3,
+  scoreForRightAnswer: 1,
+  scoreForQuickRightAnswer: 2,
+  scoreForWrongAnswer: -2
 };
 
-export const getTimeString = (time) => {
-  const second = time % 60;
-  const minute = Math.trunc(time / 60);
+export const gameState = Object.freeze({
+  isTestingMode: true,
+  levelsData: getLevelData(gameOptions.levelsCount),
+  currentScreen: 0,
+  timer: getTimer(gameOptions.timeAll),
+  attemptsLeft: gameOptions.attemptsCount,
+  userAnswers: []
+});
 
-  return `за ${minute} минут${getWordEnding(minute, [``, `у`, `ы`])} и \
-${`${second}`.length < 2 ? `0${second}` : second} секунд${getWordEnding(second, [``, `у`, `ы`])}`;
+export const changeLevel = (game, level) => {
+  if (typeof level !== `number`) {
+    throw new Error(`Level should be of type number`);
+  }
+
+  if (level < 0) {
+    throw new Error(`Level should not be negative value`);
+  }
+
+  return Object.assign({}, game, {
+    currentScreen: level
+  });
+};
+
+export const canContinue = (game) => game.attemptsLeft === 0 || !game.levelsData[game.currentScreen + 1];
+
+export const loseAttempt = (game) => {
+  const attempts = game.attemptsLeft - 1;
+
+  return Object.assign({}, game, {
+    attemptsLeft: attempts
+  });
+};
+
+export const saveAnswer = (game, answer) => {
+  game = answer.isAnswerRight ? game : loseAttempt(game);
+
+  return Object.assign({}, game, {
+    userAnswers: [...game.userAnswers, answer]
+  });
+};
+
+export const countResultScore = (userAnswers, attemptsLeft) => {
+  if (userAnswers.length < gameOptions.levelsCount || attemptsLeft === 0) {
+    return -1;
+  }
+
+  return userAnswers.reduce((acc, it) => {
+    if (it.isAnswerRight && it.spendedTime < gameOptions.timeLimitForQuickAnswer) {
+      acc += gameOptions.scoreForQuickRightAnswer;
+    }
+
+    if (it.isAnswerRight && it.spendedTime >= gameOptions.timeLimitForQuickAnswer) {
+      acc += gameOptions.scoreForRightAnswer;
+    }
+
+    if (!it.isAnswerRight) {
+      acc += gameOptions.scoreForWrongAnswer;
+    }
+
+    return acc;
+  }, 0);
 };
