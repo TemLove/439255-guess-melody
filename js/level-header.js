@@ -1,10 +1,11 @@
-import {splitTimeValues} from "./util";
+import {splitTimeValues, getRadius} from "./util";
 import {gameOptions} from "./data/game-data";
 
 export default (data) => {
   const time = splitTimeValues(data.timer.time);
   const mistakesNoteCount = gameOptions.attemptsCount - data.attemptsLeft;
   const mistakesNoteMarkup = `<img class="main-mistake" src="img/wrong-answer.png" width="35" height="49"> `;
+  const radius = 370;
 
   return `\
   <a class="play-again play-again__wrap" href="#">
@@ -12,9 +13,11 @@ export default (data) => {
 </a>
 <svg xmlns="http://www.w3.org/2000/svg" class="timer" viewBox="0 0 780 780">
   <circle
-    cx="390" cy="390" r="370"
+    cx="390" cy="390" r="${radius}"
     class="timer-line"
-    style="filter: url(.#blur); transform: rotate(-90deg) scaleY(-1); transform-origin: center"></circle>
+    style="filter: url(.#blur); transform: rotate(-90deg) scaleY(-1); transform-origin: center;
+    stroke-dasharray: ${getRadius(data.timer.time / gameOptions.timeAll, radius).stroke};
+    stroke-dashoffset: ${getRadius(data.timer.time / gameOptions.timeAll, radius).offset}"></circle>
 
   <div class="timer-value" xmlns="http://www.w3.org/1999/xhtml">
     <span class="timer-value-mins">0${time.minute}</span><!--
