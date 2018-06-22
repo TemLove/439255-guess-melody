@@ -1,6 +1,6 @@
 import {getLevelData} from "./level-data";
 
-export const getTimer = (time = gameOptions.timeAll) => {
+export const getTimer = (time = gameOptions.Time.ALL) => {
   return {
     _time: time >= 0 ? time : -time,
 
@@ -24,20 +24,22 @@ export const getTimer = (time = gameOptions.timeAll) => {
 };
 
 export const gameOptions = {
-  timeAll: 300,
-  timeLimitForQuickAnswer: 30,
+  Time: {ALL: 300,
+    QUICK_ANSWER_LIMIT: 30,
+    CRITICAL_LIMIT: 30},
   levelsCount: 10,
   attemptsCount: 3,
-  scoreForRightAnswer: 1,
-  scoreForQuickRightAnswer: 2,
-  scoreForWrongAnswer: -2
+  Score: {ANSWER_RIGHT: 1,
+    ANSWER_QUICK: 2,
+    ANSWER_WRONG: -2
+  }
 };
 
 export const gameState = Object.freeze({
   isTestingMode: true,
   levelsData: getLevelData(gameOptions.levelsCount),
   currentScreen: 0,
-  timer: getTimer(gameOptions.timeAll),
+  timer: getTimer(gameOptions.Time.ALL),
   attemptsLeft: gameOptions.attemptsCount,
   userAnswers: []
 });
@@ -80,18 +82,34 @@ export const countResultScore = (userAnswers, attemptsLeft) => {
   }
 
   return userAnswers.reduce((acc, it) => {
-    if (it.isAnswerRight && it.spendedTime < gameOptions.timeLimitForQuickAnswer) {
-      acc += gameOptions.scoreForQuickRightAnswer;
+    if (it.isAnswerRight && it.spendedTime < gameOptions.Time.QUICK_ANSWER_LIMIT) {
+      acc += gameOptions.Score.ANSWER_QUICK;
     }
 
-    if (it.isAnswerRight && it.spendedTime >= gameOptions.timeLimitForQuickAnswer) {
-      acc += gameOptions.scoreForRightAnswer;
+    if (it.isAnswerRight && it.spendedTime >= gameOptions.Time.QUICK_ANSWER_LIMIT) {
+      acc += gameOptions.Score.ANSWER_RIGHT;
     }
 
     if (!it.isAnswerRight) {
-      acc += gameOptions.scoreForWrongAnswer;
+      acc += gameOptions.Score.ANSWER_WRONG;
     }
 
     return acc;
   }, 0);
+};
+
+export const countStatistic = (gameResults, userScore) => {
+  let results = gameResults.slice();
+  results.push(userScore);
+  results.sort((a, b) => a - b);
+
+  const userPosition = results.length - results.indexOf(userScore);
+  const playersCount = results.length;
+  const successPercent = ((playersCount - userPosition) / playersCount).toFixed(2) * 100;
+
+  return {
+    userPosition,
+    playersCount,
+    successPercent
+  };
 };

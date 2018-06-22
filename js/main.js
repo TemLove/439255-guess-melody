@@ -1,4 +1,4 @@
 import {showScreen} from "./util";
-import welcomeScreenElement from "./screen_welcome";
+import welcomeScreenElement from "./screen-welcome";
 
 showScreen(welcomeScreenElement);
