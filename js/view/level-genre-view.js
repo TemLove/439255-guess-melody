@@ -51,15 +51,6 @@ export default class LevelGenreView extends AbstractView {
   </section>`;
   }
 
-  _onAnswerClick(evt) {
-    evt.preventDefault();
-
-    const input = this.element.querySelector(`#${evt.target.getAttribute(`for`)}`);
-    input.checked = !input.checked;
-
-    this._submitButonElement.disabled = !(this._answerInputElements.some((it) => it.checked));
-  }
-
   bind() {
     this._submitButonElement = this.element.querySelector(`.genre-answer-send`);
     this._answerLabelElements = [...this.element.querySelectorAll(`.genre-answer-check`)];
@@ -99,6 +90,15 @@ export default class LevelGenreView extends AbstractView {
 
   onSubmitButtonClick() {
 
+  }
+
+  _onAnswerClick(evt) {
+    evt.preventDefault();
+
+    const input = this.element.querySelector(`#${evt.target.getAttribute(`for`)}`);
+    input.checked = !input.checked;
+
+    this._submitButonElement.disabled = !(this._answerInputElements.some((it) => it.checked));
   }
 
 }
