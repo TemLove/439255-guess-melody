@@ -51,15 +51,6 @@ export default class ResultsView extends AbstractView {
     this._replayElement.addEventListener(`click`, this._handle);
   }
 
-  remove() {
-    if (this._handler) {
-      this._replayElement.removeEventListener(`click`, this._handler);
-      this._handler = null;
-    }
-
-    super.remove();
-  }
-
   onReplayClick() {
 
   }

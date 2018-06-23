@@ -31,7 +31,6 @@ const getResultScreen = (data) => {
   const resultScreenView = new ResultsView(userResult, gameOptions);
   resultScreenView.onReplayClick = () => {
     showScreen(welcomeScreenElement);
-    resultScreenView.remove();
   };
 
   return resultScreenView.element;

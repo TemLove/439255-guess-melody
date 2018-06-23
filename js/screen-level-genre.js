@@ -25,8 +25,6 @@ const getlevelGenreScreen = (data) => {
         showScreen(getlevelGenreScreen(changeLevel(gameData, nextLevel)));
       }
     }
-
-    levelGenreView.remove();
   };
 
   return levelGenreView.element;

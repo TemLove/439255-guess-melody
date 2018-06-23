@@ -15,8 +15,6 @@ welcomeScreenView.onButtonClick = () => {
   if (startLevel.type === `genre`) {
     showScreen(getlevelGenreScreen(gameState));
   }
-
-  welcomeScreenView.remove();
 };
 
 export default welcomeScreenView.element;

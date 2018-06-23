@@ -58,10 +58,6 @@ export default class LevelArtistView extends AbstractView {
 
     this.element.replaceChild(newHeaderView.element, headerElement);
 
-    if (this._headerView) {
-      this._headerView.remove();
-    }
-
     this._headerView = newHeaderView;
     this._newData = newData;
   }
@@ -78,19 +74,6 @@ export default class LevelArtistView extends AbstractView {
       isAnswerRight,
       spendedTime
     };
-  }
-
-  remove() {
-    if (this._handler) {
-      this._answerElements.forEach((it) => it.removeEventListener(`click`, this._handler));
-      this._handler = null;
-    }
-
-    if (this._headerView) {
-      this._headerView.remove();
-    }
-
-    super.remove();
   }
 
   onAnswerClick() {

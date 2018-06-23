@@ -23,8 +23,6 @@ const getlevelArtistScreen = (data) => {
         showScreen(getlevelGenreScreen(changeLevel(gameData, nextLevel)));
       }
     }
-
-    levelArtistView.remove();
   };
 
   return levelArtistView.element;

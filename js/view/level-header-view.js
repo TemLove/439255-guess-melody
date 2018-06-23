@@ -50,12 +50,4 @@ export default class Header extends AbstractView {
     this._playAgainElement.addEventListener(`click`, this._handler);
   }
 
-  remove() {
-    if (this._handler) {
-      this._playAgainElement.removeEventListener(`click`, this._handler);
-      this._handler = null;
-    }
-
-    super.remove();
-  }
 }
