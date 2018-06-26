@@ -1,4 +1,4 @@
-import {getLevelData} from "./level-data";
+export const IS_TESTING_MODE = true;
 
 export const getTimer = (time = gameOptions.Time.ALL) => {
   return {
@@ -23,7 +23,7 @@ export const getTimer = (time = gameOptions.Time.ALL) => {
   };
 };
 
-export const gameOptions = {
+export const gameOptions = Object.freeze({
   Time: {ALL: 300,
     QUICK_ANSWER_LIMIT: 30,
     CRITICAL_LIMIT: 30},
@@ -33,11 +33,9 @@ export const gameOptions = {
     ANSWER_QUICK: 2,
     ANSWER_WRONG: -2
   }
-};
+});
 
-export const gameState = Object.freeze({
-  isTestingMode: true,
-  levelsData: getLevelData(gameOptions.levelsCount),
+export const gameInitState = Object.freeze({
   currentScreen: 0,
   timer: getTimer(gameOptions.Time.ALL),
   attemptsLeft: gameOptions.attemptsCount,
@@ -57,8 +55,6 @@ export const changeLevel = (game, level) => {
     currentScreen: level
   });
 };
-
-export const canContinue = (game) => game.attemptsLeft === 0 || !game.levelsData[game.currentScreen + 1];
 
 export const loseAttempt = (game) => {
   const attempts = game.attemptsLeft - 1;
