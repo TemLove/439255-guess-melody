@@ -14,7 +14,7 @@ export default class WelcomeScreenView extends AbstractView {
     <button class="main-play">Начать игру</button>
     <h2 class="title main-title">Правила игры</h2>
     <p class="text main-text">
-      Правила просты&nbsp;— за&nbsp;${this._data.Time.All / SEC_IN_MINUTE} минут ответить на все вопросы.<br>
+      Правила просты&nbsp;— за&nbsp;${this._data.Time.ALL / SEC_IN_MINUTE} минут ответить на все вопросы.<br>
       Ошибиться можно ${this._data.attemptsCount} раза.<br>
       Удачи!
     </p>

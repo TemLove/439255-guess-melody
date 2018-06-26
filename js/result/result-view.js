@@ -14,8 +14,8 @@ export default class ResultsView extends AbstractView {
     let replayText = `Попробовать ещё раз`;
 
     if (!this._data.isWin) {
-      title = this._data.attemptsUsed === this._options.attemptsCount ? `Какая жалость!` : `Увы и ах!`;
-      content = this._data.attemptsUsed === this._options.attemptsCount
+      title = this._data.result === `timeOut` ? `Увы и ах!` : `Какая жалость!`;
+      content = this._data.result === `timeOut`
         ? `<div class="main-stat">Время вышло!<br>Вы не успели отгадать все мелодии</div>`
         : `<div class="main-stat">У вас закончились все попытки.<br>Ничего, повезёт в следующий раз!</div>`;
     }
@@ -23,16 +23,16 @@ export default class ResultsView extends AbstractView {
     if (this._data.isWin) {
       title = `Вы настоящий меломан!`;
       content = `<div class="main-stat">за&nbsp;${this._data.timeSpended.minute}&nbsp;минут\
-      ${getWordEnding(this._data.timeSpended.minute, [``, `у`, `ы`])} и \
-      ${`${this._data.timeSpended.second}`.padStart(2, `0`)}&nbsp;секунд\
-      ${getWordEnding(this._data.timeSpended.second, [``, `у`, `ы`])}
+${getWordEnding(this._data.timeSpended.minute, [``, `у`, `ы`])} и \
+${`${this._data.timeSpended.second}`.padStart(2, `0`)}&nbsp;секунд\
+${getWordEnding(this._data.timeSpended.second, [``, `у`, `ы`])}
       <br>вы&nbsp;набрали ${this._data.score} балл${getWordEnding(this._data.score, [`ов`, ``, `а`])} \
-      (${this._data.quickAnswers} быстры${getWordEnding(this._data.quickAnswers, [`х`, `й`, `х`])})
+(${this._data.quickAnswers} быстры${getWordEnding(this._data.quickAnswers, [`х`, `й`, `х`])})
       <br>совершив ${this._data.attemptsUsed} ошиб${getWordEnding(this._data.attemptsUsed, [`ок`, `ку`, `ки`])}</div>
     <span class="main-comparison">Вы заняли ${this._data.statistic.userPosition} \
-    место из ${this._data.statistic.playersCount}. Это&nbsp;лучше, чем \
-    у&nbsp;${this._data.statistic.successPercent}%&nbsp;игроков</span>`;
-      replayText = `Попробовать ещё раз`;
+место из ${this._data.statistic.playersCount}. Это&nbsp;лучше, чем \
+у&nbsp;${this._data.statistic.successPercent}%&nbsp;игроков</span>`;
+      replayText = `Сыграть ещё раз`;
     }
 
     return `<section class="main main--result">

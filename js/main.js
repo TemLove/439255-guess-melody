@@ -1,4 +1,3 @@
-import {showScreen} from "./util";
-import welcomeScreenElement from "./screen-welcome";
+import Application from "./application";
 
-showScreen(welcomeScreenElement);
+Application.showWelcome();
