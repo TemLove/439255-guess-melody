@@ -50,6 +50,13 @@
   margin: 0 0 1em;
 }
 
+.main-preloader {
+  position: absolute;
+  top: 360px;
+  left: calc(50% - 7.5em);
+}
+
+
 @import "--level/main--level";
 @import "--result/main--result";
 @import "--welcome/main--welcome";
@@ -58,3 +65,4 @@
 @import "play-again";
 @import "modal-confirm";
 @import "modal-error";
+@import "preloader";

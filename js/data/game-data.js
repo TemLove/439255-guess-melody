@@ -1,4 +1,5 @@
 export const IS_TESTING_MODE = true;
+export const LEVEL_TYPES = [`artist`, `genre`];
 
 export const getTimer = (time = gameOptions.Time.ALL) => {
   return {

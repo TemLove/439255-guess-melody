@@ -2,6 +2,7 @@ import {splitTimeValues} from "../util";
 import {gameOptions, countResultScore, countStatistic} from "../data/game-data";
 import ResultsView from "./result-view";
 import Application from "../application";
+import Loader from "../loader";
 
 const gameResults = [];
 
@@ -20,7 +21,7 @@ export default class ResultScreen {
     this._view = new ResultsView(this._userResult, gameOptions);
     this._view.onReplayClick = () => {
       if (this._userResult.isWin) {
-        Application.showGame();
+        Loader.loadData().then((data) => Application.showGame(data));
       } else {
         Application.showGame(this._model.data);
       }

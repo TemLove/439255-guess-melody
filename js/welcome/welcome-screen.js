@@ -4,10 +4,10 @@ import Application from "../application";
 
 export default class WelcomeScreen {
 
-  constructor(data = gameOptions) {
-    this.view = new WelcomeScreenView(data);
+  constructor(data, options = gameOptions) {
+    this.view = new WelcomeScreenView(options);
     this.view.onButtonClick = () => {
-      Application.showGame();
+      Application.showGame(data);
     };
   }
 

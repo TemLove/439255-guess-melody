@@ -1,0 +1,32 @@
+.preloader-wave {
+  $rectCount: 7;
+  $animationDuration: 1.2s;
+  $delayRange: 0.4s;
+
+  width: 10em * 1.5;
+  height: 8em;
+  margin: auto;
+  text-align: center;
+  font-size: 1em;
+
+  .preloader-rect {
+    background-color: $color-orange;
+    height: 100%;
+    width: .5em;
+    display: inline-block;
+    animation: preloader-wave-stretch-delay $animationDuration infinite ease-in-out;
+  }
+
+  @for $i from 1 through $rectCount {
+    .preloader-rect-#{$i} { animation-delay: - $animationDuration + $delayRange / ($rectCount - 1) * ($i - 1); }
+  }
+}
+
+@keyframes preloader-wave-stretch-delay {
+  0%, 40%, 100% {
+    transform: scaleY(0.4);
+  }
+  20% {
+    transform: scaleY(1.0);
+  }
+}
