@@ -3,11 +3,18 @@ import Application from './application.js';
 
 const SERVER_URL = `https://es.dump.academy/guess-melody`;
 
+const ERROR_MESSAGE = {
+  400: `400. Неверный запрос`,
+  401: `401. Пользователь не авторизован`,
+  404: `404. Ничего не найдено`,
+  500: `500. Ошибка сервера`
+};
+
 const checkStatus = (response) => {
   if (response.ok) {
     return response;
   } else {
-    throw new Error(`${response.status}: ${response.statusText}`);
+    throw new Error(ERROR_MESSAGE[response.status] || `Неизвестный статус`);
   }
 };
 
@@ -20,7 +27,7 @@ export default class Loader {
       .then(checkStatus)
       .then(toJSON)
       .then(adaptServerData)
-      .catch((response) => Application.showError(response.status));
+      .catch((response) => Application.showError(response.message));
   }
 
 }

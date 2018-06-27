@@ -35,7 +35,7 @@ export default class Application {
 
   static showError(data) {
     const errorScreen = new ErrorScreen(data);
-    showScreen(errorScreen.element);
+    document.body.appendChild(errorScreen.element);
   }
 
 }
