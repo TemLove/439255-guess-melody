@@ -13,9 +13,9 @@ const ERROR_MESSAGE = {
 const checkStatus = (response) => {
   if (response.ok) {
     return response;
-  } else {
-    throw new Error(ERROR_MESSAGE[response.status] || `Неизвестный статус`);
   }
+
+  throw new Error(ERROR_MESSAGE[response.status] || `Неизвестный статус`);
 };
 
 const toJSON = (res) => res.json();
@@ -23,7 +23,7 @@ const toJSON = (res) => res.json();
 export default class Loader {
 
   static loadData() {
-    return fetch(`${SERVER_URL}/questions`)
+    return window.fetch(`${SERVER_URL}/questions`)
       .then(checkStatus)
       .then(toJSON)
       .then(adaptServerData)

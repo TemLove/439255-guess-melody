@@ -2,28 +2,16 @@ import AbstractView from "../../abstract-view";
 import {IS_TESTING_MODE} from "../../data/game-data";
 import PlayerView from "./player-view";
 
-const Genre = {
-  COUNTRY: `country`,
-  BLUES: `blues`,
-  FOLK: `folk`,
-  CLASSICAL: `classical`,
-  ELECTRONIC: `electronic`,
-  HIP_HOP: `hip-hop`,
-  JAZZ: `jazz`,
-  POP: `pop`,
-  ROCK: `rock`
-};
-
 const GENRES = new Map([
-  [Genre.COUNTRY, `кантри`],
-  [Genre.BLUES, `блюз`],
-  [Genre.FOLK, `фолк`],
-  [Genre.CLASSICAL, `классические`],
-  [Genre.ELECTRONIC, `электро`],
-  [Genre.HIP_HOP, `хип-хоп`],
-  [Genre.JAZZ, `джаз`],
-  [Genre.POP, `поп`],
-  [Genre.ROCK, `рок`]
+  [`country`, `кантри`],
+  [`blues`, `блюз`],
+  [`folk`, `фолк`],
+  [`classical`, `классические`],
+  [`electronic`, `электро`],
+  [`hip-hop`, `хип-хоп`],
+  [`jazz`, `джаз`],
+  [`pop`, `поп`],
+  [`rock`, `рок`]
 ]);
 
 export default class LevelGenreView extends AbstractView {
