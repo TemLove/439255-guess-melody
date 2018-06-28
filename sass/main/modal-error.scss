@@ -1,5 +1,5 @@
 .modal-error__wrap {
-  position: absolute;
+  position: fixed;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -30,4 +30,5 @@
 
 .modal-error__text {
   font-size: 18px;
+  text-align: center;
 }

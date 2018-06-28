@@ -3,13 +3,15 @@ import {IS_TESTING_MODE} from "../../data/game-data";
 import PlayerView from "./player-view";
 
 const GENRES = new Map([
-  [`Jazz`, `джаз`],
-  [`Rock`, `рок`],
-  [`Country`, `кантри`],
-  [`R&B`, `ритм-н-блюз`],
-  [`Pop`, `поп`],
-  [`Electronic`, `электро`],
-  [`Indie rock`, `инди-рок`]
+  [`country`, `кантри`],
+  [`blues`, `блюз`],
+  [`folk`, `фолк`],
+  [`classical`, `классические`],
+  [`electronic`, `электро`],
+  [`hip-hop`, `хип-хоп`],
+  [`jazz`, `джаз`],
+  [`pop`, `поп`],
+  [`rock`, `рок`]
 ]);
 
 export default class LevelGenreView extends AbstractView {

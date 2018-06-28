@@ -1,11 +1,10 @@
 import {gameInitState, gameOptions, changeLevel, saveAnswer} from "../data/game-data";
-import {getLevelData} from "../data/level-data";
 
 export default class GameModel {
   constructor(gameData, state = gameInitState) {
     this._state = state;
     this._state.timer.time = gameOptions.Time.ALL;
-    this._data = gameData ? gameData : getLevelData(gameOptions.levelsCount);
+    this._data = gameData;
   }
 
   get state() {
