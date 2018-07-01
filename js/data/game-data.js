@@ -96,7 +96,7 @@ export const countResultScore = (userAnswers, attemptsLeft) => {
 };
 
 export const countStatistic = (gameResults, userScore) => {
-  console.log(gameResults);
+
   let results = gameResults.slice();
   results.push(userScore);
   results.sort((a, b) => a - b);
