@@ -18,8 +18,10 @@ export default class PlayerView extends AbstractView {
 
   bind() {
     this._audio = this.element.querySelector(`audio`);
+    this._audio.load();
     this._control = this.element.querySelector(`.player-control`);
     this._control.addEventListener(`click`, (evt) => {
+      evt.preventDefault();
       const isPlaying = evt.target.classList.contains(`player-control--pause`);
       if (isPlaying) {
         this.stop();

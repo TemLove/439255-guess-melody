@@ -28,9 +28,11 @@ export default class Application {
     gameScreen.startGame();
   }
 
-  static showResult(stats) {
-    const statistics = new ResultScreen(stats);
-    showScreen(statistics.view.element);
+  static showResult(data) {
+    Loader.loadResults().then((stats) => {
+      const statistics = new ResultScreen(stats, data);
+      showScreen(statistics.view.element);
+    });
   }
 
   static showError(data) {

@@ -2,8 +2,9 @@ import {getWordEnding} from "../util";
 import AbstractView from "../abstract-view";
 
 export default class ResultsView extends AbstractView {
-  constructor(data, options) {
+  constructor(state, data, options) {
     super();
+    this._state = state;
     this._data = data;
     this._options = options;
   }
@@ -29,9 +30,9 @@ ${getWordEnding(this._data.timeSpended.second, [``, `у`, `ы`])}
       <br>вы&nbsp;набрали ${this._data.score} балл${getWordEnding(this._data.score, [`ов`, ``, `а`])} \
 (${this._data.quickAnswers} быстры${getWordEnding(this._data.quickAnswers, [`х`, `й`, `х`])})
       <br>совершив ${this._data.attemptsUsed} ошиб${getWordEnding(this._data.attemptsUsed, [`ок`, `ку`, `ки`])}</div>
-    <span class="main-comparison">Вы заняли ${this._data.statistic.userPosition} \
-место из ${this._data.statistic.playersCount}. Это&nbsp;лучше, чем \
-у&nbsp;${this._data.statistic.successPercent}%&nbsp;игроков</span>`;
+    <span class="main-comparison">Вы заняли ${this._state.userPosition} \
+место из ${this._state.playersCount}. Это&nbsp;лучше, чем \
+у&nbsp;${this._state.successPercent}%&nbsp;игроков</span>`;
       replayText = `Сыграть ещё раз`;
     }
 

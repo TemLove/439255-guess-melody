@@ -15,8 +15,10 @@ export default class GameScreen {
 
   init() {
     this._view = new GameView(this._model);
+    this._view.onStartLevel = () => this.tick();
+
     this._view.onPlayAgain = () => {
-      Application.showWelcome();
+      Application.showPreload();
     };
 
     this._view.onUserAnswer = (evt) => {
@@ -48,13 +50,11 @@ export default class GameScreen {
 
   startGame() {
     this._previousAnswerTime = this._model.time;
-    this.tick();
   }
 
   continueGame() {
     this._model = this._model.nextLevel(this._model);
     this._view.updateContent(this._model);
-    this.tick();
   }
 
   endGame() {
