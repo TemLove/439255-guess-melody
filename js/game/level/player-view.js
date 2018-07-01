@@ -27,7 +27,7 @@ export default class PlayerView extends AbstractView {
   play() {
     this._control.classList.toggle(`player-control--pause`);
     this._control.classList.toggle(`player-control--play`);
-    this._audio.play();
+    this._audio.play().catch(()=> {});
     this.isPlaying = true;
   }
 
