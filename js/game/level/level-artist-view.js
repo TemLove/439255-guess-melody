@@ -43,9 +43,17 @@ export default class LevelArtistView extends AbstractView {
     this._handler = this.onUserAnswer;
     this._answerElements.forEach((it) => it.addEventListener(`click`, this._handler));
 
-    this._players.push(new PlayerView(this._model.currentLevel.target));
+    const player = new PlayerView(this._model.currentLevel.target);
+    player.onPlay = () => {
+      if (player.isPlaying) {
+        player.stop();
+      } else {
+        player.play();
+      }
+    };
+    this._players.push(player);
     const playerWrapper = this.element.querySelector(`.player-wrapper`);
-    playerWrapper.appendChild(this._players[0].element);
+    playerWrapper.appendChild(player.element);
   }
 
   isAnswerRight(answerElement) {

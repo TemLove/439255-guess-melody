@@ -2,7 +2,7 @@ import {adaptServerData} from './data/data-adapter.js';
 import Application from './application.js';
 
 const SERVER_URL = `https://es.dump.academy/guess-melody`;
-const APP_ID = 439255;
+const APP_ID = 439256;
 
 const ERROR_MESSAGE = {
   400: `400. Неверный запрос`,

@@ -53,8 +53,9 @@ export default class GameView extends AbstractView {
     const firstAudio = this.players[0].element.querySelector(`audio`);
     firstAudio.addEventListener(`canplaythrough`, () => {
       this.players[0].play();
-      this.onStartLevel();
     });
+
+    this.onStartLevel();
   }
 
   showModal() {

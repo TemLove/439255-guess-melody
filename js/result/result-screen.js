@@ -19,7 +19,8 @@ export default class ResultScreen {
   init() {
     this._getUserResult();
     if (this._userResult.isWin) {
-      Loader.saveResult(this._result);
+      console.log(this._userResult);
+      Loader.saveResult(this._userResult);
     }
     const statistic = countStatistic(this._data, this._userResult.score);
     this._view = new ResultsView(statistic, this._userResult, gameOptions);
