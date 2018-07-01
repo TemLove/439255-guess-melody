@@ -61,15 +61,31 @@ export default class LevelGenreView extends AbstractView {
 
     const playerWrappers = [...this.element.querySelectorAll(`.player-wrapper`)];
     this._model.currentLevel.answers.forEach((track, index) => {
-      this._players[index] = new PlayerView(track.src);
+      const player = new PlayerView(track.src);
+      player.onPlay = () => {
+        if (this.players[index].isPlaying) {
+          this.players[index].stop();
+        } else {
+          this._players.forEach((it) => {
+            if (it.isPlaying) {
+              it.stop();
+            }
+          });
+          this.players[index].play();
+        }
+      };
+      this._players[index] = player;
+
       playerWrappers[index].appendChild(this._players[index].element);
     });
   }
 
   isAnswerRight() {
-    const answerElement = this._answerInputElements.find((it) => it.checked);
-    const index = this._answerInputElements.indexOf(answerElement);
-    return this._model.currentLevel.answers[index].isAnswerRight;
+    const userAnswers = this._answerInputElements.map((it) => it.checked);
+    const isAnswerRight = this._model.currentLevel.answers.reduce((acc, answer, index) => {
+      return acc && answer.isAnswerRight === userAnswers[index];
+    }, true);
+    return isAnswerRight;
   }
 
   _onAnswerClick(evt) {

@@ -49,7 +49,13 @@ export default class GameView extends AbstractView {
     const contentElement = this.element.querySelector(`.main-wrap`);
 
     this.element.replaceChild(this._contentView.element, contentElement);
-    this.players[0].play();
+
+    const firstAudio = this.players[0].element.querySelector(`audio`);
+    firstAudio.addEventListener(`canplaythrough`, () => {
+      this.players[0].play();
+    });
+
+    this.onStartLevel();
   }
 
   showModal() {
@@ -68,6 +74,10 @@ export default class GameView extends AbstractView {
 
   isAnswerRight(answerElement) {
     return this._contentView.isAnswerRight(answerElement);
+  }
+
+  onStartLevel() {
+
   }
 
   onUserAnswer() {
