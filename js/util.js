@@ -1,8 +1,3 @@
-export const getElementFromTemplate = (template) => {
-  const domParser = new DOMParser();
-  return domParser.parseFromString(template, `text/html`).body.firstElementChild;
-};
-
 export const showScreen = (screenElement) => {
   const APP_ELEMENT = document.querySelector(`.app`);
   const MAIN_ELEMENT = APP_ELEMENT.querySelector(`section.main`);

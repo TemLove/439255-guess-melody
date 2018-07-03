@@ -24,6 +24,28 @@ export const getTimer = (time = gameOptions.Time.ALL) => {
   };
 };
 
+const getSrcs = (data) => {
+  const sources = new Set(data.reduce((acc, level) => {
+    return [...acc, ...(level.type === LEVEL_TYPES[0] ? [level.target] : level.answers.map((it) => it.src))];
+  }, []));
+  return [...sources];
+};
+
+export const getAudio = (data) => {
+  return getSrcs(data).map((src) => {
+    return new Promise((resolve, reject) => {
+      const audio = new Audio();
+      audio.addEventListener(`loadeddata`, () => {
+        resolve([src, audio]);
+      }, false);
+      audio.addEventListener(`error`, () => {
+        reject(`Failed to load audio file`);
+      }, false);
+      audio.src = src;
+    });
+  });
+};
+
 export const gameOptions = Object.freeze({
   Time: {ALL: 300,
     QUICK_ANSWER_LIMIT: 30,

@@ -4,7 +4,8 @@ export default class GameModel {
   constructor(gameData, state = gameInitState) {
     this._state = state;
     this._state.timer.time = gameOptions.Time.ALL;
-    this._data = gameData;
+    this._data = gameData.levelsData;
+    this._audioMap = gameData.audioMap;
   }
 
   get state() {
@@ -13,6 +14,10 @@ export default class GameModel {
 
   get data() {
     return Object.freeze(this._data);
+  }
+
+  get audioMap() {
+    return Object.freeze(this._audioMap);
   }
 
   get attemptsLeft() {

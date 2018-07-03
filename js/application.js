@@ -6,6 +6,7 @@ import GameScreen from "./game/game-screen";
 import GameModel from "./game/game-model";
 import ErrorScreen from "./preload/error-screen";
 import Loader from "./loader";
+import {getAudio} from "./data/game-data";
 
 
 export default class Application {
@@ -17,8 +18,14 @@ export default class Application {
   }
 
   static showWelcome(data) {
-    const welcome = new WelcomeScreen(data);
-    showScreen(welcome.view.element);
+    Promise.all(getAudio(data))
+      .then((audios) => {
+        const audioMap = new Map(audios);
+        const gameData = Object.assign({}, {levelsData: data}, {audioMap});
+        const welcome = new WelcomeScreen(gameData);
+        showScreen(welcome.view.element);
+      })
+      .catch((err) => Application.showError(err));
   }
 
   static showGame(data) {

@@ -53,6 +53,7 @@ export default class GameScreen {
   }
 
   continueGame() {
+    this._view.players.forEach((player) => player.stop());
     this._model = this._model.nextLevel(this._model);
     this._view.updateContent(this._model);
   }

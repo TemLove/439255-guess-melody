@@ -43,10 +43,10 @@ export default class LevelArtistView extends AbstractView {
     this._handler = this.onUserAnswer;
     this._answerElements.forEach((it) => it.addEventListener(`click`, this._handler));
 
-    const player = new PlayerView(this._model.currentLevel.target);
+    const player = new PlayerView(this._model.currentLevel.target, this._model.audioMap);
     player.onPlay = () => {
       if (player.isPlaying) {
-        player.stop();
+        player.pause();
       } else {
         player.play();
       }

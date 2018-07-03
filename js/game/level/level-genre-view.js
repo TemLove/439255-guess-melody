@@ -61,14 +61,14 @@ export default class LevelGenreView extends AbstractView {
 
     const playerWrappers = [...this.element.querySelectorAll(`.player-wrapper`)];
     this._model.currentLevel.answers.forEach((track, index) => {
-      const player = new PlayerView(track.src);
+      const player = new PlayerView(track.src, this._model.audioMap);
       player.onPlay = () => {
         if (this.players[index].isPlaying) {
-          this.players[index].stop();
+          this.players[index].pause();
         } else {
           this._players.forEach((it) => {
             if (it.isPlaying) {
-              it.stop();
+              it.pause();
             }
           });
           this.players[index].play();
