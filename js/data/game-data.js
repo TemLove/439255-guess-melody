@@ -35,7 +35,7 @@ export const getAudio = (data) => {
   return getSrcs(data).map((src) => {
     return new Promise((resolve, reject) => {
       const audio = new Audio();
-      audio.addEventListener(`loadeddata`, () => {
+      audio.addEventListener(`canplaythrough`, () => {
         resolve([src, audio]);
       }, false);
       audio.addEventListener(`error`, () => {
